@@ -17,12 +17,15 @@
     "@remix-run/serve": "^2.15.0",
     "framer-motion": "^11.11.17",
     "isbot": "^4.1.0",
+    "jsonwebtoken": "^9.0.2",
     "motion": "^11.11.17",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.15.0",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.4",

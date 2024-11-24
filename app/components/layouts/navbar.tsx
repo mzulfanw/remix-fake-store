@@ -10,6 +10,7 @@ import {
 } from '@nextui-org/react';
 import { useState } from 'react';
 import { useRootData } from '~/root';
+import { CartIcon } from '@nextui-org/shared-icons';
 
 export default function Navbar() {
   const { categories, user } =
@@ -28,7 +29,9 @@ export default function Navbar() {
           className="sm:hidden"
         />
         <NavbarBrand>
-          <p className="font-bold text-inherit">ACME</p>
+          <Link href="/" className="text-black font-bold">
+            Cibaduyut Store
+          </Link>
         </NavbarBrand>
       </NavbarContent>
       <NavbarMenu>
@@ -41,7 +44,12 @@ export default function Navbar() {
             </NavbarItem>
           ))}
       </NavbarMenu>
-      <NavbarContent justify="end">
+      <NavbarContent justify="end" className="items-center">
+        <NavbarItem>
+          <Link href="/cart" color="foreground" className="w-full">
+            <CartIcon className="w-full h-full block mx-auto" />
+          </Link>
+        </NavbarItem>
         <NavbarItem>
           <Button
             as={Link}

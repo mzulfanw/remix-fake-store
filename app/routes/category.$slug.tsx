@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { useLoaderData, Link } from '@remix-run/react';
-import { Card, CardHeader, CardBody, Image } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Image, Button } from '@nextui-org/react';
 import { LoaderData, TProduct } from '~/types';
 
 export const meta: MetaFunction<typeof loader> = params => {
@@ -28,8 +28,8 @@ export default function Product() {
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {data.map(product => (
         <Card
-          className="py-4 w-full h-full flex flex-col"
-          radius="lg"
+          className="py-2 px-2 w-full h-full flex flex-col"
+          radius="md"
           key={product.title}
         >
           <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
@@ -45,13 +45,15 @@ export default function Product() {
             />
             <p className="mt-2 text-center text-tiny">{product.description}</p>
           </CardBody>
-          <Link
+          <Button
+            as={Link}
             to={`/product/${product.category}/${product.title}/${product.id}`}
             className="mt-4"
-            prefetch="render"
+            prefetch="intent"
+            color="primary"
           >
-            Navigate{' '}
-          </Link>
+            Detail
+          </Button>
         </Card>
       ))}
     </div>

@@ -1,5 +1,6 @@
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
 import { Request } from '@remix-run/web-fetch';
+import { decodeToken } from '~/utils/jwt.server';
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -12,7 +13,7 @@ const sessionStorage = createCookieSessionStorage({
   },
 });
 
-export async function createUserSession(token: string, redirectTo?: string) {
+export async function createUserSession(token: string, redirectTo: string) {
   const session = await sessionStorage.getSession();
   session.set('token', token);
   return redirect(redirectTo as string, {
@@ -39,11 +40,11 @@ export async function requireUserId(
 ) {
   const session = await getUserSession(request);
   const userId = session.get('token');
-  if (!userId || typeof userId !== 'string') {
+  if (!userId?.token || typeof userId?.token !== 'string') {
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
-    throw redirect(`/auth/login?${searchParams}`);
+    throw redirect(`/login?${searchParams}`);
   }
-  return userId;
+  return decodeToken(userId.token);
 }
 
 export async function logout(request: Request) {

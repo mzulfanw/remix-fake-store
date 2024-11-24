@@ -1,5 +1,5 @@
 import { MetaFunction } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
+import { Form, useActionData, useNavigation } from '@remix-run/react';
 import { Input, Button } from '@nextui-org/react';
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { createUserSession } from '~/utils/auth.server';
@@ -7,7 +7,7 @@ import { createUserSession } from '~/utils/auth.server';
 export const meta: MetaFunction = () => {
   return [
     {
-      title: 'Login',
+      title: 'Cibaduyut Store - Login',
       description: 'Login to your account',
     },
   ];
@@ -43,13 +43,21 @@ export async function action({ request }: ActionFunctionArgs) {
     }),
   });
 
+  const url = new URL(request.url); // transform to new URL
+
+  const userDestination = url.searchParams.has('redirectTo')
+    ? url.searchParams.get('redirectTo')
+    : '/';
+
   const data = await token.json();
 
-  return createUserSession(data, '/');
+  return createUserSession(data, userDestination as string);
 }
 
 export default function Login() {
   const { errors } = useActionData<typeof action>() || { errors: {} };
+
+  const navigation = useNavigation();
 
   return (
     <Form method="post">
@@ -75,7 +83,13 @@ export default function Login() {
         />
       </div>
       <div className="mb-4 w-full">
-        <Button type="submit" color="primary" className="w-full">
+        <Button
+          type="submit"
+          color="primary"
+          className="w-full"
+          isDisabled={navigation.state === 'submitting'}
+          isLoading={navigation.state === 'submitting'}
+        >
           Action
         </Button>
       </div>
