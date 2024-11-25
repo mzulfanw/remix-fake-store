@@ -1,5 +1,5 @@
 import { useLoaderData } from '@remix-run/react';
-import { LoaderFunctionArgs, redirect } from '@remix-run/node';
+import { LoaderFunctionArgs } from '@remix-run/node';
 import { requireUserId } from '~/utils/auth.server';
 import { Request } from '@remix-run/web-fetch';
 

@@ -7,10 +7,12 @@ import {
   Button,
   NavbarMenuToggle,
   NavbarMenu,
+  Badge,
 } from '@nextui-org/react';
 import { useState } from 'react';
 import { useRootData } from '~/root';
 import { CartIcon } from '@nextui-org/shared-icons';
+import { useFetcher } from '@remix-run/react';
 
 export default function Navbar() {
   const { categories, user } =
@@ -20,6 +22,10 @@ export default function Navbar() {
     }) || {};
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const fetcherCart = useFetcher({ key: 'add-to-cart' });
+
+  const countCart = Number(fetcherCart.formData?.get('cart') || 0);
 
   return (
     <NextUINav shouldHideOnScroll onMenuOpenChange={setIsOpen}>
@@ -47,7 +53,14 @@ export default function Navbar() {
       <NavbarContent justify="end" className="items-center">
         <NavbarItem>
           <Link href="/cart" color="foreground" className="w-full">
-            <CartIcon className="w-full h-full block mx-auto" />
+            <Badge
+              color="danger"
+              content={countCart}
+              shape="circle"
+              isInvisible={fetcherCart.state === 'idle'}
+            >
+              <CartIcon className="w-full h-full block mx-auto" />
+            </Badge>
           </Link>
         </NavbarItem>
         <NavbarItem>

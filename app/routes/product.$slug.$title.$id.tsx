@@ -1,8 +1,8 @@
 import {
   useLoaderData,
-  Form,
   useActionData,
   useNavigation,
+  useFetcher,
 } from '@remix-run/react';
 import {
   ActionFunctionArgs,
@@ -35,8 +35,11 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const id = formData.get('id');
+
+  const cart = formData.get('cart');
+
   const gate = await requireUserId(request as unknown as Request);
-  console.log(id, gate);
+  console.log(id, gate, cart, typeof cart);
 
   const response = await fetch('https://fakestoreapi.com/carts', {
     method: 'POST',
@@ -44,7 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      userId: 5,
+      userId: 2,
       date: '2020-02-03',
       products: [
         { productId: 5, quantity: 1 },
@@ -57,7 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
     return Response.json({ error: 'Failed to add to cart' }, { status: 400 });
   }
 
-  return Response.json({ success: 'Added to cart' });
+  return Response.json({ success: 'Added to cart', cart });
 }
 
 export default function ProductDetail() {
@@ -67,6 +70,8 @@ export default function ProductDetail() {
     (useLoaderData<typeof loader>() as LoaderData<TProduct>) || {};
 
   const response = useActionData<typeof action>();
+
+  const fetcher = useFetcher({ key: 'add-to-cart' });
 
   useEffect(() => {
     if (response) {
@@ -99,8 +104,9 @@ export default function ProductDetail() {
           </div>
           <Divider />
           <p className="text-gray-600">{data.description}</p>
-          <Form method="post" className="w-full">
+          <fetcher.Form method="post" className="w-full">
             <input type="hidden" name="id" value={data.id} />
+            <input type="hidden" name="cart" value={1} />
             <Button
               color="primary"
               className="mt-4 w-full"
@@ -110,7 +116,7 @@ export default function ProductDetail() {
             >
               Add to Cart
             </Button>
-          </Form>
+          </fetcher.Form>
         </div>
       </div>
     </div>
